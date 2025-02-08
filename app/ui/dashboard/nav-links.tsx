@@ -4,6 +4,7 @@ import {
     UserGroupIcon,
     HomeIcon,
     DocumentDuplicateIcon,
+    InformationCircleIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,9 +15,14 @@ import clsx from 'clsx';
 const links = [
     { name: 'Home', href: '/dashboard', icon: HomeIcon },
     {
-        name: 'profile',
+        name: 'Profile',
         href: '/dashboard/profile',
         icon: DocumentDuplicateIcon,
+    },
+    {
+        name: 'About Me',
+        href: '/dashboard/about-me',
+        icon: InformationCircleIcon,
     },
 ];
 
@@ -31,14 +37,14 @@ export default function NavLinks() {
                         key={link.name}
                         href={link.href}
                         className={clsx(
-                            "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3",
+                            "flex h-[48px] items-center justify-center gap-2 rounded-md bg-[#868C9A] p-3 text-sm font-medium text-[#4A4D59] hover:bg-[#6B7280] md:flex-none md:justify-start md:p-2 md:px-3 w-12 group hover:w-auto",
                             {
-                                'bg-sky-100 text-blue-600': pathname === link.href,
+                                'bg-[#fff]': pathname === link.href,
                             },
                         )}
                     >
                         <LinkIcon className="w-6" />
-                        <p className="hidden md:block">{link.name}</p>
+                        <p className="hidden group-hover:block">{link.name}</p>
                     </Link>
                 );
             })}
