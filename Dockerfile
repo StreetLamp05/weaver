@@ -1,20 +1,23 @@
-# Use the official Python image as a base
-FROM python:3.9-slim
+# Use Node.js official image as a parent image
+FROM node:22-alpine
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.txt .
+# Copy package.json and package-lock.json to the working directory
+COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN npm install
 
-# Copy the application files into the container
+# Copy the rest of the application to the working directory
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 5000
+# Build the Next.js application
+RUN npm run build
 
-# Run the application
-CMD ["python", "app.py"]
+# Expose the Next.js default port
+EXPOSE 3000
+
+# Command to run the application
+CMD ["npm", "run", "start"]
