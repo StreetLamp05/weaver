@@ -15,3 +15,6 @@ dependencies.
 
 Public frameworks utilized:
 React.js, Next.js, Tailwind CSS, Flask, Scikit-learn, Pandas, MongoDB
+
+![Screenshot from 2025-02-09 09-18-17](https://github.com/user-attachments/assets/1bcd1008-dfd3-49e4-85ae-bd8eea42ea8a)
+![Screenshot from 2025-02-09 09-20-12](https://github.com/user-attachments/assets/fff9dfdb-1640-46c7-8ab5-057816056688)
