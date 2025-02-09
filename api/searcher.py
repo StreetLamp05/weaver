@@ -1,10 +1,19 @@
 import numpy as np
 import pandas as pd
 import pickle
+import db  # Assuming `db.get_df()` loads the dataset
 
-# File paths
-CSV_PATH = "data/spotify_data.csv"
-MODEL_PATH = "data/knn_model.pkl"
+
+print("test")
+# Load dataset and model
+MODEL_PATH = "api/data/knn_model.pkl"
+print('getting dataframe')
+df = db.get_df()
+
+
+
+
+print('before features def')
 
 # Features used for recommendations
 FEATURES = ["danceability", "energy", "key", "loudness", "mode",
@@ -19,7 +28,8 @@ with open(MODEL_PATH, "rb") as f:
     knn = pickle.load(f)
 
 def get_song_features_by_id(track_id):
-    """Fetches song features by track ID from CSV."""
+    print('get_song_features_by_id')
+    """Fetches song features by track ID."""
     song_row = df[df["track_id"] == track_id]
     if song_row.empty:
         return None
