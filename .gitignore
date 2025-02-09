@@ -40,3 +40,6 @@ __pycache__
 
 #scikitlearn
 /sklearn-env
+
+
+/api/data
