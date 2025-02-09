@@ -17,8 +17,7 @@ export default function SongTree() {
     };
 
     const addInitialSongs = async () => {
-        const input = prompt("Enter 5 track IDs (comma-separated):");
-        if (!input) return;
+        const input = ("53QF56cjZA9RTuuMZDrSA6,1s8tP3jP4GZcyHDsjvw218,7BRCa8MPiyuvr2VU3O9W0F,63wsZUhUZLlh1OsyrZq7sz,6nXIYClvJAfi6ujLiKqEq8");
 
         const trackIds = input.split(",").map(id => id.trim());
         const initialNodes = await Promise.all(trackIds.map(async (id) => {
