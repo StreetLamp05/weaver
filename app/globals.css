@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground: #fff;
+  --background: #6C6D80;
+}
+
+body.nav-expanded {
+    margin-left: 0; /* Reset margin */
+    transition: none;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  margin: 0;
+}
