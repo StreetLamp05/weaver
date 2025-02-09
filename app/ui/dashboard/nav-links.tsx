@@ -20,8 +20,8 @@ const links = [
         icon: DocumentDuplicateIcon,
     },
     {
-        name: 'About Me',
-        href: '/dashboard/about-me',
+        name: 'About Us',
+        href: '/dashboard/about-us',
         icon: InformationCircleIcon,
     },
 ];
