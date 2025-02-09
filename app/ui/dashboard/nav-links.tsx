@@ -21,7 +21,7 @@ const links = [
     },
     {
         name: 'About Us',
-        href: '/dashboard/about-us',
+        href: '/dashboard/about',
         icon: InformationCircleIcon,
     },
 ];
