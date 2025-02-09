@@ -1,24 +1,13 @@
+from flask import Flask, request, jsonify
 import numpy as np
 import pandas as pd
 import pickle
-import db  # Assuming `db.get_df()` loads the dataset
 
+app = Flask(__name__)
 
-print("test")
-# Load dataset and model
-MODEL_PATH = "api/data/knn_model.pkl"
-print('getting dataframe')
-df = db.get_df()
-
-
-
-
-print('before features def')
-
-# Features used for recommendations
-FEATURES = ["danceability", "energy", "key", "loudness", "mode",
-            "speechiness", "acousticness", "instrumentalness",
-            "liveness", "valence", "tempo", "time_signature"]
+# File paths
+CSV_PATH = "data/spotify_data.csv"
+MODEL_PATH = "data/knn_model.pkl"
 
 # Load dataset from CSV
 df = pd.read_csv(CSV_PATH)
@@ -27,9 +16,12 @@ df = pd.read_csv(CSV_PATH)
 with open(MODEL_PATH, "rb") as f:
     knn = pickle.load(f)
 
+FEATURES = ["danceability", "energy", "key", "loudness", "mode",
+            "speechiness", "acousticness", "instrumentalness",
+            "liveness", "valence", "tempo", "time_signature"]
+
 def get_song_features_by_id(track_id):
-    print('get_song_features_by_id')
-    """Fetches song features by track ID."""
+    """Fetches song features by track ID from CSV."""
     song_row = df[df["track_id"] == track_id]
     if song_row.empty:
         return None
@@ -45,15 +37,18 @@ def find_similar_songs(song_features, k=5):
     
     return similar_songs[["track_name", "artist_name", "track_id"]].to_dict(orient="records")
 
-def find_similar_songs_by_id(track_id, k=5):
-    """Finds similar songs given a track ID."""
+@app.route("/find_similar", methods=["GET"])
+def find_similar():
+    """API endpoint to find similar songs."""
+    track_id = request.args.get("track_id")
+    k = int(request.args.get("k", 5))
+    
     song_features = get_song_features_by_id(track_id)
     if song_features is None:
-        return None
-    return find_similar_songs(song_features, k)
+        return jsonify({"error": "Song not found"}), 404
+    
+    similar_songs = find_similar_songs(song_features, k)
+    return jsonify(similar_songs)
 
-# Example usage
 if __name__ == "__main__":
-    print("Test search")
-    results = find_similar_songs_by_id("53QF56cjZA9RTuuMZDrSA6", 5)
-    print(results)
+    app.run(debug=True)
