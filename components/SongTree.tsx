@@ -17,7 +17,7 @@ export default function SongTree() {
     };
 
     const addInitialSongs = async () => {
-        const input = prompt("Enter 5 track IDs (comma-separated):");
+        const input = prompt("Enter 5 track IDs (comma-separated):\n Sample: ");
         if (!input) return;
 
         const trackIds = input.split(",").map(id => id.trim());

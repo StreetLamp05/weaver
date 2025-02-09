@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { DotGothic16 } from "next/font/google";
+import { Literata } from "next/font/google";
 
-const dotGothic16 = DotGothic16({
+const literata = Literata({
     weight: "400",
     subsets: ["latin"],
 });
@@ -11,7 +11,7 @@ const dotGothic16 = DotGothic16({
 export default function Home() {
     return (
         <main
-            className={`${dotGothic16.className} flex flex-col items-center justify-center min-h-screen bg-[#66657D] text-white relative pt-10`}
+            className={`${literata.className} flex flex-col items-center justify-center min-h-screen bg-[#66657D] text-white relative pt-10`}
         >
             {/* Main Text - Moved Up */}
             <div className="text-center -mt-20"> {/* Increased negative margin */}
