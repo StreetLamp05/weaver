@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import pickle
 import db  # Assuming `db.get_df()` loads the dataset
 
