@@ -1,16 +1,11 @@
-import os
 import numpy as np
 import pandas as pd
 import pickle
 from sklearn.neighbors import NearestNeighbors
 
-# CSV path and model save path
-CSV_PATH = "data/spotify_data.csv"
-MODEL_DIR = "data/"
-MODEL_PATH = os.path.join(MODEL_DIR, "knn_model.pkl")
-
-# Ensure the directory exists
-os.makedirs(MODEL_DIR, exist_ok=True)
+# CSV path
+CSV_PATH = "api/data/spotify_data.csv"
+MODEL_PATH = "api/data/knn_model.pkl"
 
 # Features for similarity
 FEATURES = ["danceability", "energy", "key", "loudness", "mode",
@@ -32,4 +27,3 @@ with open(MODEL_PATH, "wb") as f:
     pickle.dump(knn, f)
 
 print(f"KNN model saved at `{MODEL_PATH}`. Total songs indexed: `{len(df)}`")
- 
