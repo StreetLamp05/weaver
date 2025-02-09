@@ -34,7 +34,7 @@ const AboutPage: React.FC = () => {
                                 href={member.linkedin}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline"
+                                className="text-blue-400 hover:underline"
                             >
                                 LinkedIn
                             </a>
