@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-# import faiss_search
+import searcher
 from functools import wraps
 from jose import jwt
 import requests
@@ -57,7 +57,7 @@ def generate_nodes(k):
     data = request.json
     if not data or not isinstance(data.get('track_id'), str):
         return jsonify({'error': 'Invalid input'}), 400
-    return jsonify(faiss_search.find_similar_songs_by_id(data.get('track_id'), k)), 200
+    return jsonify(searcher.find_similar_songs_by_id(data.get('track_id'), k)), 200
 
 if __name__ == '__main__':  
    app.run() 
