@@ -1,6 +1,7 @@
 import './globals.css'
 import { DotGothic16 } from 'next/font/google'
-import { dotGothic } from './ui/fonts'
+
+const dotGothic16 = DotGothic16({ weight: "400", subsets: ["latin"] });
 
 
 export const metadata = {
@@ -15,7 +16,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={dotGothic.className}>{children}</body>
+
+      <body className={dotGothic16.className}>
+        {children}
+      </body>
     </html>
   )
 }
