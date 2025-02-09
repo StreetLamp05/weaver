@@ -1,4 +1,11 @@
 import BasePage from "@/components/BasePage";
+import { ReactNode } from "react";
+
+interface BasePageProps {
+    title: string;
+    description: string;
+    children?: ReactNode;
+}
 
 export default function Profile() {
     const user = {
