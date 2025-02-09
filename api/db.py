@@ -60,3 +60,5 @@ def connects():
     except Exception as e:
         print(e)
         return False
+    
+print(get_df().iloc[2])
