@@ -3,8 +3,10 @@ import searcher
 from functools import wraps
 from jose import jwt
 import requests
+from flask_cors import CORS  # Import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 AUTH0_DOMAIN = 'your-auth0-domain'
 API_AUDIENCE = 'your-api-audience'
@@ -55,9 +57,12 @@ def requires_auth(f):
 @app.route("/api/generate_nodes/<k>", methods=['POST'])
 def generate_nodes(k):
     data = request.json
+    print(data.get('track_id'))
     if not data or not isinstance(data.get('track_id'), str):
         return jsonify({'error': 'Invalid input'}), 400
-    return jsonify(searcher.find_similar_songs_by_id(data.get('track_id'), k)), 200
+    response = jsonify(searcher.find_similar_songs_by_id(data.get('track_id'), int(k)))
+    print(response)
+    return response, 200
 
 if __name__ == '__main__':  
    app.run() 
