@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --foreground: #fff;
-  --background: #6C6D80;
+    --foreground: #fff;
+    --background: #6C6D80;
 }
 
 body.nav-expanded {
