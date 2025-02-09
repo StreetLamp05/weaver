@@ -14,12 +14,12 @@ export default function Navbar() {
             <div className="flex items-center justify-between gap-4">
                 {/* Navigation Links */}
                 <div className="flex gap-6">
-                    <Link href="/dashboard/" className="hover:text-gray-300 transition-colors">SongWeb</Link>
+                    <Link href="/dashboard/" className="hover:text-gray-300 transition-colors">Dashboard</Link>
                     <Link href="/dashboard/about" className="hover:text-gray-300 transition-colors">About</Link>
                 </div>
 
                 {/* Login Button */}
-                <Link href="/login" className="bg-white text-[#000] px-4 py-2 rounded-md shadow hover:bg-gray-200 transition">Login</Link>
+                <Link href="/" className="bg-white text-[#000] px-4 py-2 rounded-md shadow hover:bg-gray-200 transition">Sign Out</Link>
             </div>
         </nav>
     );
