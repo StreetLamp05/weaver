@@ -1,5 +1,5 @@
 
-import { DotGothic16 ,Inter, Lusitana } from 'next/font/google';
+import { DotGothic16 ,Inter, Lusitana  } from 'next/font/google';
 
 
 
