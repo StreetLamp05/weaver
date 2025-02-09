@@ -1,58 +1,28 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect, session
 import searcher
-from functools import wraps
-from jose import jwt
 import requests
 from flask_cors import CORS  # Import CORS
+import os
+import requests
+import urllib.parse
 
 app = Flask(__name__)
 CORS(app)
 
-AUTH0_DOMAIN = 'your-auth0-domain'
-API_AUDIENCE = 'your-api-audience'
-ALGORITHMS = ['RS256']
+app.secret_key = "ugahacks"
 
-def get_token_auth_header():
-    auth = request.headers.get('Authorization', None)
-    if not auth:
-        return jsonify({'error': 'Authorization header is missing'}), 401
-    parts = auth.split()
-    if parts[0].lower() != 'bearer':
-        return jsonify({'error': 'Authorization header must start with Bearer'}), 401
-    elif len(parts) == 1:
-        return jsonify({'error': 'Token not found'}), 401
-    elif len(parts) > 2:
-        return jsonify({'error': 'Authorization header must be Bearer token'}), 401
-    token = parts[1]
-    return token
+SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+SPOTIFY_REDIRECT_URI = "http://localhost:5000/callback"
 
-def requires_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = get_token_auth_header()
-        try:
-            json_url = f'https://{AUTH0_DOMAIN}/.well-known/jwks.json'
-            jwks = requests.get(json_url).json()
-            unverified_header = jwt.get_unverified_header(token)
-            rsa_key = {}
-            for key in jwks['keys']:
-                if key['kid'] == unverified_header['kid']:
-                    rsa_key = {
-                        'kty': key['kty'],
-                        'kid': key['kid'],
-                        'use': key['use'],
-                        'n': key['n'],
-                        'e': key['e']
-                    }
-            if rsa_key:
-                payload = jwt.decode(
-                    token, rsa_key, algorithms=ALGORITHMS, audience=API_AUDIENCE, issuer=f'https://{AUTH0_DOMAIN}/'
-                )
-                return f(*args, **kwargs)
-            return jsonify({'error': 'Invalid token'}), 401
-        except Exception as e:
-            return jsonify({'error': str(e)}), 401
-    return decorated
+SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize"
+SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token"
+SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1/"
+SCOPE = "playlist-modify-public playlist-modify-private"
+
+# File paths
+CSV_PATH = "data/spotify_data.csv"
+MODEL_PATH = "data/knn_model.pkl"
     
 @app.route("/api/generate_nodes/<k>", methods=['POST'])
 def generate_nodes(k):
@@ -64,5 +34,66 @@ def generate_nodes(k):
     print(response)
     return response, 200
 
+
+@app.route("/login")
+def login():
+    params = {
+        "client_id": SPOTIFY_CLIENT_ID,
+        "response_type": "code",
+        "redirect_uri": SPOTIFY_REDIRECT_URI,
+        "scope": SCOPE
+    }
+    auth_url = f"{SPOTIFY_AUTH_URL}?{urllib.parse.urlencode(params)}"
+    print(auth_url)
+    return redirect(auth_url)
+
+@app.route("/callback")
+def callback():
+    code = request.args.get("code")
+    print(code)
+    if not code:
+        return "Error: Authorization failed."
+
+    token_data = {
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": SPOTIFY_REDIRECT_URI,
+        "client_id": SPOTIFY_CLIENT_ID,
+        "client_secret": SPOTIFY_CLIENT_SECRET
+    }
+    response = requests.post(SPOTIFY_TOKEN_URL, data=token_data)
+    token_info = response.json()
+
+    if "access_token" not in token_info:
+        return "Error: Failed to obtain access token."
+
+    session["access_token"] = token_info["access_token"]
+    return redirect("/create_playlist")
+
+@app.route("/create_playlist", methods=["POST"])
+def create_playlist():
+    if "access_token" not in session:
+        return redirect("/login")
+
+    headers = {"Authorization": f"Bearer {session['access_token']}"}
+    user_response = requests.get(f"{SPOTIFY_API_BASE_URL}me", headers=headers)
+    user_info = user_response.json()
+
+    if request.method == "POST":
+        playlist_name = request.form["playlist_name"]
+        playlist_data = {"name": playlist_name, "public": True}
+        playlist_response = requests.post(
+            f"{SPOTIFY_API_BASE_URL}users/{user_info['id']}/playlists", 
+            headers=headers,
+            json=playlist_data
+        )
+        return jsonify(playlist_response.json())
+
+    return '''
+        <form method="post">
+            <input type="text" name="playlist_name" placeholder="Enter playlist name" required>
+            <button type="submit">Create Playlist</button>
+        </form>
+    '''
 if __name__ == '__main__':  
    app.run() 

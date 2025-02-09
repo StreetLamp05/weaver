@@ -3,11 +3,8 @@ import numpy as np
 import pandas as pd
 import pickle
 
-app = Flask(__name__)
 
-# File paths
-CSV_PATH = "data/spotify_data.csv"
-MODEL_PATH = "data/knn_model.pkl"
+app = Flask(__name__)
 
 # Load dataset from CSV
 df = pd.read_csv(CSV_PATH)
@@ -36,6 +33,19 @@ def find_similar_songs(song_features, k=5):
     similar_songs["distance"] = distances[0]
     
     return similar_songs[["track_name", "artist_name", "track_id"]].to_dict(orient="records")
+
+@app.route("/find_similar", methods=["GET"])
+def find_similar():
+    """API endpoint to find similar songs."""
+    track_id = request.args.get("track_id")
+    k = int(request.args.get("k", 5))
+    
+    song_features = get_song_features_by_id(track_id)
+    if song_features is None:
+        return jsonify({"error": "Song not found"}), 404
+    
+    similar_songs = find_similar_songs(song_features, k)
+    return jsonify(similar_songs)
 
 @app.route("/find_similar", methods=["GET"])
 def find_similar():
